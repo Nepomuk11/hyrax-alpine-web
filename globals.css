@@ -13,10 +13,16 @@
 body {
   color: rgb(var(--foreground-rgb));
   background: var(--ghost-white);
+  font-family: 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.02em;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  
+  .tracking-tight {
+    letter-spacing: -0.03em;
   }
 }
