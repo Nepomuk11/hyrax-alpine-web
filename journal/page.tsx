@@ -26,25 +26,17 @@ export default function JournalPage() {
 
   return (
     <div className="font-sans tracking-tight bg-white min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center text-white overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage:
-              'url(https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=3540&auto=format&fit=crop)',
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-display font-black mb-6 tracking-tight">
+      {/* Simple Header */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h1 className="text-5xl md:text-6xl font-display font-black text-slate-900 mb-12 text-center tracking-tight">
             FIELD NOTES
           </h1>
         </div>
       </section>
 
       {/* Blog Index */}
-      <section className="py-24 bg-white">
+      <section className="pb-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-5xl md:text-6xl font-display font-black text-slate-900 mb-12 text-center tracking-tight">
             Field Notes

@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { ArrowRight, ChevronDown, Users, DollarSign, Shield, Mountain, CalendarCheck, UserCheck, Plane, MessageCircle, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight, ChevronDown, CameraOff, FileCheck, MousePointerClick, Award, CalendarCheck, UserCheck, Plane, MessageCircle, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import ContactModal from '../components/ContactModal';
@@ -10,6 +10,34 @@ export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState<typeof testimonials[0] | null>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const heroSlides = [
+    {
+      headline: 'The Forgotten African Giant',
+      subtext: 'Mount Kenya. The raw alternative.',
+      backgroundImage: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=3540&auto=format&fit=crop',
+    },
+    {
+      headline: 'We are #2. So We Try Harder.',
+      subtext: 'Wilder than Kilimanjaro. Less crowded. More real.',
+      backgroundImage: 'https://images.unsplash.com/photo-1589553416260-f586c8f1514f?q=80&w=3000',
+    },
+    {
+      headline: 'Your Office Chair Misses You.',
+      subtext: 'Just kidding. It doesnt. Go climb a real mountain.',
+      backgroundImage: 'https://images.unsplash.com/photo-1545158828-56eb0d15746e?q=80&w=3000',
+    },
+  ];
+
+  // Auto-play hero slider
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 15000);
+
+    return () => clearInterval(interval);
+  }, [heroSlides.length]);
 
   const expeditions = [
     {
@@ -98,6 +126,20 @@ export default function Home() {
       image: 'https://images.unsplash.com/photo-1605540459523-289b52a514d9?q=80&w=1000',
       avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=400',
     },
+    {
+      id: 9,
+      name: 'Rachel W.',
+      quote: 'Incredible guides, stunning scenery, and memories that will last forever.',
+      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1000',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400',
+    },
+    {
+      id: 10,
+      name: 'Chris M.',
+      quote: 'More challenging than expected, but the team made it feel achievable.',
+      image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400',
+    },
   ];
 
   const faqs = [
@@ -120,28 +162,63 @@ export default function Home() {
 
   return (
     <div className="font-sans tracking-tight">
-      {/* Hero Section - Full Screen */}
-      <section className="relative min-h-screen flex flex-col justify-center items-center text-white overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage:
-              'url(https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=3540&auto=format&fit=crop)',
-          }}
-        />
+      {/* Hero Section - Storytelling Slider */}
+      <section className="relative min-h-screen flex items-center text-white overflow-hidden">
+        {/* Background Images with Fade Transition */}
+        {heroSlides.map((slide, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
+              index === currentSlide ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{
+              backgroundImage: `url(${slide.backgroundImage})`,
+            }}
+          />
+        ))}
         {/* Heavy dark gradient fade at bottom */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-display font-black mb-6 tracking-tight">
-            THE FORGOTTEN GIANT
-          </h1>
-          <Link
-            href="#expeditions"
-            className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white/30 transition-all duration-300"
-          >
-            Explore Expeditions
-            <ArrowRight className="h-5 w-5" />
-          </Link>
+        {/* Text Content - Left Side */}
+        <div className="relative z-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+          <div className="max-w-2xl relative">
+            {heroSlides.map((slide, index) => (
+              <div
+                key={index}
+                className={`transition-opacity duration-1000 ${
+                  index === currentSlide ? 'opacity-100 relative' : 'opacity-0 absolute inset-0'
+                }`}
+              >
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-black mb-4 tracking-tight">
+                  {slide.headline}
+                </h1>
+                <p className="text-xl md:text-2xl text-gray-200 mb-8">
+                  {slide.subtext}
+                </p>
+                <Link
+                  href="#expeditions"
+                  className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white/30 transition-all duration-300"
+                >
+                  Explore Expeditions
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* Slide Indicators */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+          {heroSlides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`h-2 rounded-full transition-all ${
+                index === currentSlide
+                  ? 'bg-white w-8'
+                  : 'bg-white/50 hover:bg-white/75 w-2'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
         </div>
       </section>
 
@@ -151,49 +228,49 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             <div className="text-center">
               <div className="flex justify-center mb-6">
-                <Users className="h-16 w-16 text-burnt-orange" />
+                <CameraOff className="h-16 w-16 text-burnt-orange" />
               </div>
               <h3 className="text-2xl font-display font-bold text-slate-900 mb-2 tracking-tight">
-                No Mass Tourism
+                No Selfie Queues
               </h3>
               <p className="text-gray-600">
-                Exclusive small groups. Maximum 8 climbers per expedition.
+                No tourist highways. Just you, the rock, and raw wilderness.
               </p>
             </div>
 
             <div className="text-center">
               <div className="flex justify-center mb-6">
-                <DollarSign className="h-16 w-16 text-burnt-orange" />
+                <FileCheck className="h-16 w-16 text-burnt-orange" />
               </div>
               <h3 className="text-2xl font-display font-bold text-slate-900 mb-2 tracking-tight">
-                Fair Pay
+                German Bureaucracy (Included)
               </h3>
               <p className="text-gray-600">
-                Local guides earn 3x industry standard. Real impact, real change.
+                German liability law. 100% insured. Your mom will love this part.
               </p>
             </div>
 
             <div className="text-center">
               <div className="flex justify-center mb-6">
-                <Shield className="h-16 w-16 text-burnt-orange" />
+                <MousePointerClick className="h-16 w-16 text-burnt-orange" />
               </div>
               <h3 className="text-2xl font-display font-bold text-slate-900 mb-2 tracking-tight">
-                German Safety Standards
+                Lazy Booking. Hard Hiking.
               </h3>
               <p className="text-gray-600">
-                Medical support, satellite communication, proven protocols.
+                Book in 3 clicks. We automated the boring stuff.
               </p>
             </div>
 
             <div className="text-center">
               <div className="flex justify-center mb-6">
-                <Mountain className="h-16 w-16 text-burnt-orange" />
+                <Award className="h-16 w-16 text-burnt-orange" />
               </div>
               <h3 className="text-2xl font-display font-bold text-slate-900 mb-2 tracking-tight">
-                50% Cheaper than Kili
+                Local Legends Only
               </h3>
               <p className="text-gray-600">
-                Same altitude. Wilder terrain. Half the price tag.
+                Led by Kenya's best. No corporate suits. Pure stoke.
               </p>
             </div>
           </div>
@@ -207,7 +284,7 @@ export default function Home() {
             Choose Your Suffering
           </h2>
           <p className="text-xl text-gray-600 text-center mb-12">
-            Three routes. One goal. Your summit.
+            The Scenic. The Steep. The Savage. Compare our 3 main Mount Kenya routes.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -243,7 +320,7 @@ export default function Home() {
                   <div className="mt-auto">
                     <Link
                       href={`/expeditions/${expedition.slug}`}
-                      className="inline-block w-full bg-[#D35400] text-white px-6 py-3 rounded-xl font-bold text-center hover:bg-[#C0392B] transition-all duration-300"
+                      className="inline-block w-full bg-brand-orange text-white px-6 py-3 rounded-xl font-bold text-center hover:bg-[#C0392B] transition-all duration-300"
                     >
                       View Details
                     </Link>
@@ -259,7 +336,7 @@ export default function Home() {
       <section className="py-24 bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-5xl md:text-6xl font-display font-black text-slate-900 mb-16 text-center tracking-tight">
-            THE EASY PART
+            Get On The List
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {/* Step 1 */}
@@ -270,10 +347,10 @@ export default function Home() {
                 </div>
               </div>
               <h3 className="text-2xl font-display font-bold text-slate-900 mb-3 tracking-tight">
-                Secure on of the limited slots
+                The Signal
               </h3>
               <p className="text-gray-600">
-              Request your preferred dates + 10% deposit hold
+                Pick your dates. No credit card yet. It's a date proposal, not a marriage contract.
               </p>
             </div>
 
@@ -285,10 +362,10 @@ export default function Home() {
                 </div>
               </div>
               <h3 className="text-2xl font-display font-bold text-slate-900 mb-3 tracking-tight">
-                Guide Check
+                We Verify
               </h3>
               <p className="text-gray-600">
-                We confirm your booking and send you the final payment details.
+                We text our Guides. We check huts, and guide availability. We never overbook.
               </p>
             </div>
 
@@ -303,7 +380,7 @@ export default function Home() {
                 Green Light
               </h3>
               <p className="text-gray-600">
-                Receive your confirmation and start packing!
+                You get a secure link. Pay. Get insured. Start breaking in your boots.
               </p>
             </div>
           </div>
@@ -311,12 +388,12 @@ export default function Home() {
       </section>
 
       {/* Social Proof Section - Instagram Grid */}
-      <section className="bg-[#1F2937]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <section className="bg-brand-dark">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex flex-col min-h-[600px]">
           <h2 className="text-4xl md:text-5xl font-display font-black text-white mb-12 text-center tracking-tight">
             They Survived
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-8 my-auto">
             {testimonials.map((testimonial) => (
               <div
                 key={testimonial.id}
@@ -343,7 +420,7 @@ export default function Home() {
             <p className="text-white font-bold text-lg md:text-xl">Still have specific questions?</p>
             <button
               onClick={() => setIsContactModalOpen(true)}
-              className="bg-[#D35400] text-white py-3 md:py-4 px-6 md:px-8 rounded-full font-black uppercase tracking-widest hover:bg-[#C0392B] transition-colors inline-flex items-center gap-2 text-sm md:text-base"
+              className="bg-brand-orange text-white py-3 md:py-4 px-6 md:px-8 rounded-full font-black uppercase tracking-widest hover:bg-[#C0392B] transition-colors inline-flex items-center gap-2 text-sm md:text-base"
             >
               <MessageCircle className="h-4 w-4 md:h-5 md:w-5" />
               Send us a message
